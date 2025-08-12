@@ -59,6 +59,7 @@
             border-radius: 50%;
             animation: floatUp linear infinite;
             z-index: -1;
+            will-change: transform;
         }
         @keyframes floatUp {
             0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
@@ -139,7 +140,7 @@
             /* 让子元素在3D空间中排列 */
             transform-style: preserve-3d;
             /* 定义动画：rotate 动画，时长 30秒，线性速度，无限循环（更慢更优雅） */
-            animation: rotate 30s linear infinite;
+            animation: rotate 25s ease-in-out infinite; transform: translateZ(0);
             /* 添加柔和发光边框 */
             box-shadow: 0 0 30px rgba(255, 183, 197, 0.7), 0 0 60px rgba(255, 183, 197, 0.3);
             border-radius: 15px;
@@ -239,7 +240,7 @@
             /* 添加粉色光晕效果 */
             box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
             transition: all 0.5s ease;
-            filter: brightness(1.05) contrast(1.05);
+            
         }
         section div:hover img{
             transform: scale(1.08);
