@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 指定文档的字符编码为UTF-8 -->
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <!-- 设置视口，使页面在不同设备上有良好的表现 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <!-- 页面标题 -->
+    <title>3D旋转木马相册</title>
+
+    <!-- 内嵌CSS样式 -->
+    <style>
+        *{
+            /* 初始化 取消页面的内外边距 */
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            /* 使用 Flexbox 进行布局，元素水平居中 */
+            display: flex;
+            /* 水平居中对齐 */
+            justify-content: center;
+            /* 垂直居中对齐 */
+            align-items: center;
+            /* 使 body 元素的高度占满整个视窗高度 */
+            height: 100vh;
+            /* 浪漫粉紫渐变背景，添加缓慢动画 */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #f687b3 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 30s ease infinite;
+            /* 设置视距，产生3D效果 */
+            perspective: 1000px;
+            /* 添加星星背景 */
+            overflow: hidden;
+            position: relative;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* 光晕效果 */
+        .light-flare {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(1.2);
+            animation: pulse 15s infinite ease-in-out;
+            z-index: -1;
+        }
+        /* 粒子背景效果 */
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            z-index: -1;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-10%) scale(1.2); opacity: 0; }
+        }
+        .flare-top-left {
+            top: -300px;
+            left: -300px;
+        }
+        .flare-bottom-right {
+            bottom: -300px;
+            right: -300px;
+            animation-delay: 7s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+        /* 星星背景效果 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        /* 樱花飘落动画 */
+        .sakura {
+            position: absolute;
+            border-radius: 50% 50% 50% 0;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            z-index: -1;
+        }
+        .sakura.pink {
+            background-color: #ffccd5;
+        }
+        .sakura.light-pink {
+            background-color: #ffe5ec;
+        }
+        .sakura.white-pink {
+            background-color: #fff0f3;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-10%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        section{
+            /* 定位为相对定位 */
+            position: relative;
+            /* 设置 section 元素的宽度 */
+            width: 200px;
+            /* 设置 section 元素的高度 */
+            height: 300px;
+            /* 让子元素在3D空间中排列 */
+            transform-style: preserve-3d;
+            /* 定义动画：rotate 动画，时长 30秒，线性速度，无限循环（更慢更优雅） */
+            animation: rotate 30s linear infinite;
+            /* 添加柔和发光边框 */
+            box-shadow: 0 0 30px rgba(255, 183, 197, 0.7), 0 0 60px rgba(255, 183, 197, 0.3);
+            border-radius: 15px;
+        }
+        /* 爱心装饰样式 */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff4d6d;
+            transform: rotate(45deg);
+            animation: float 3s ease-in-out infinite;
+        }
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff4d6d;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+        /* 浪漫文字标语样式 */
+        .romantic-quote {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+        }
+        .romantic-quote p {
+            font-family: 'Segoe Script', 'Brush Script MT', cursive;
+            font-size: 28px;
+            color: white;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 0 0 30px rgba(255, 105, 180, 0.6), 0 0 45px rgba(255, 105, 180, 0.4);
+            animation: float 8s ease-in-out infinite, textShimmer 3s infinite alternate, colorPulse 5s infinite ease-in-out;
+        }
+        @keyframes colorPulse {
+            0% { color: #ffffff; }
+            50% { color: #fff0f3; text-shadow: 0 0 20px rgba(255, 105, 180, 0.9), 0 0 35px rgba(255, 105, 180, 0.7); }
+            100% { color: #ffffff; }
+        }
+        @keyframes textShimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        /* 图片梦幻效果 */
+        section div::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+        }
+        section:hover{
+            /* 鼠标移入时暂停动画并轻微放大 */
+            animation-play-state: paused;
+            transform: scale(1.05);
+            transition: transform 0.5s ease;
+        }
+        section div{
+            /* 绝对定位 */
+            position: absolute;
+            /* 左上角对齐 */
+            left: 0;
+            top: 0;
+            /* 宽度为父元素宽度的 100% */
+            width: 100%;
+            /* 高度为父元素高度的 100% */
+            height: 100%;
+            /* 文本居中 */
+            text-align: center;
+            /* 设置倒影效果，倒影在元素下方，距离 15px，并且使用渐变效果 */
+            -webkit-box-reflect: below 15px -webkit-linear-gradient(transparent 50%,rgba(255,255,255,0.3));
+        }
+        section div img{
+            /* 图片宽度为父元素宽度的 100% */
+            width: 100%;
+            /* 图片高度为父元素高度的 100% */
+            height: 100%;
+            /* 添加圆角和边框，增强柔和感 */
+            border-radius: 10px;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            /* 添加粉色光晕效果 */
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+            transition: all 0.5s ease;
+            filter: brightness(1.05) contrast(1.05);
+        }
+        section div:hover img{
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 105, 180, 0.6);
+        }
+        section div:nth-child(1){
+            /* 第一个 div 旋转 0 度，并沿 Z 轴移动 300px */
+            transform: rotateY(0deg) translateZ(300px);
+        }
+        section div:nth-child(2){
+            /* 第二个 div 旋转 45 度，并沿 Z 轴移动 300px */
+            transform: rotateY(45deg) translateZ(300px);
+        }
+        section div:nth-child(3){
+            /* 第三个 div 旋转 90 度，并沿 Z 轴移动 300px */
+            transform: rotateY(90deg) translateZ(300px);
+        }
+        section div:nth-child(4){
+            /* 第四个 div 旋转 135 度，并沿 Z 轴移动 300px */
+            transform: rotateY(135deg) translateZ(300px);
+        }
+        section div:nth-child(5){
+            /* 第五个 div 旋转 180 度，并沿 Z 轴移动 300px */
+            transform: rotateY(180deg) translateZ(300px);
+        }
+        section div:nth-child(6){
+            /* 第六个 div 旋转 225 度，并沿 Z 轴移动 300px */
+            transform: rotateY(225deg) translateZ(300px);
+        }
+        section div:nth-child(7){
+            /* 第七个 div 旋转 270 度，并沿 Z 轴移动 300px */
+            transform: rotateY(270deg) translateZ(300px);
+        }
+        section div:nth-child(8){
+            /* 第八个 div 旋转 315 度，并沿 Z 轴移动 300px */
+            transform: rotateY(315deg) translateZ(300px);
+        }
+
+        /* 定义旋转动画 */
+        @keyframes rotate {
+            /* 动画从 0 度开始 */
+            0%{
+                transform: rotateY(0deg);
+            }
+            /* 动画到 360 度结束，添加缓动效果使旋转更优雅 */
+            100%{
+                transform: rotateY(360deg);
+            }
+        }
+        /* 爱心浮动动画 */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 光晕效果 -->
+    <div class="light-flare flare-top-left"></div>
+    <div class="light-flare flare-bottom-right"></div>
+    <!-- 樱花装饰 -->
+    <div class="sakura pink" style="width: 12px; height: 12px; top: -5%; left: 10%; animation-duration: 15s; animation-delay: 0s;"></div>
+      <div class="sakura light-pink" style="width: 10px; height: 10px; top: -3%; left: 25%; animation-duration: 18s; animation-delay: 1s;"></div>
+      <div class="sakura white-pink" style="width: 14px; height: 14px; top: -4%; left: 40%; animation-duration: 16s; animation-delay: 2s;"></div>
+      <div class="sakura pink" style="width: 9px; height: 9px; top: -6%; left: 65%; animation-duration: 17s; animation-delay: 3.5s;"></div>
+      <div class="sakura light-pink" style="width: 13px; height: 13px; top: -2%; left: 80%; animation-duration: 19s; animation-delay: 2.2s;"></div>
+    <div class="sakura light-pink" style="width: 11px; height: 11px; top: -2%; left: 55%; animation-duration: 20s; animation-delay: 0.5s;"></div>
+      <div class="sakura white-pink" style="width: 13px; height: 13px; top: -5%; left: 70%; animation-duration: 17s; animation-delay: 3s;"></div>
+    <div class="sakura pink" style="width: 9px; height: 9px; top: -3%; left: 85%; animation-duration: 16s; animation-delay: 1.5s;"></div>
+      <!-- 粒子元素 -->
+      <div class="particle" style="width: 3px; height: 3px; left: 15%; animation-duration: 25s; animation-delay: 0s;"></div>
+      <div class="particle" style="width: 2px; height: 2px; left: 25%; animation-duration: 30s; animation-delay: 2s;"></div>
+      <div class="particle" style="width: 4px; height: 4px; left: 45%; animation-duration: 22s; animation-delay: 1s;"></div>
+      <div class="particle" style="width: 3px; height: 3px; left: 65%; animation-duration: 28s; animation-delay: 3s;"></div>
+      <div class="particle" style="width: 2px; height: 2px; left: 85%; animation-duration: 24s; animation-delay: 0.5s;"></div>
+      <div class="particle" style="width: 4px; height: 4px; left: 35%; animation-duration: 26s; animation-delay: 2.5s;"></div>
+    <div class="sakura" style="width: 12px; height: 12px; top: -4%; left: 95%; animation-duration: 16s; animation-delay: 2.5s;"></div>
+    <!-- 浪漫爱心装饰 -->
+    <div class="heart" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="heart" style="top: 15%; left: 80%; animation-delay: 0.5s; width: 15px; height: 15px;"></div>
+    <div class="heart" style="top: 20%; left: 30%; animation-delay: 1s;"></div>
+    <div class="heart" style="top: 70%; left: 70%; animation-delay: 1.5s; width: 18px; height: 18px;"></div>
+    <div class="heart" style="top: 80%; left: 20%; animation-delay: 2s;"></div>
+    <div class="heart" style="top: 30%; left: 60%; animation-delay: 2.5s; width: 12px; height: 12px;"></div>
+    <!-- 3D旋转木马容器 -->
+    <div class="romantic-quote">
+             <p>"与你共度的每一刻都是最美的回忆"</p>
+             <p style="font-size: 20px;">"Every moment with you is a beautiful memory"</p>
+         </div>
+        <section>
+        <!-- 每个div代表木马上的一张图片，使用绝对路径 -->
+        <div><img src="images/1.jpg" alt="Image 1"></div>
+        <div><img src="images/2.jpg" alt="Image 2"></div>
+        <div><img src="images/3.jpg" alt="Image 3"></div>
+        <div><img src="images/4.png" alt="Image 4"></div>
+        <div><img src="images/5.jpg" alt="Image 5"></div>
+        <div><img src="images/6.jpg" alt="Image 6"></div>
+        <div><img src="images/7.jpg" alt="Image 7"></div>
+        <div><img src="images/8.jpg" alt="Image 8"></div>
+    </section>
+</body>
+
+</html>
